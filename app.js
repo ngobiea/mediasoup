@@ -133,7 +133,7 @@ peers.on('connection', async socket => {
 
   // see client's socket.emit('transport-produce', ...)
   socket.on('transport-produce', async ({ kind, rtpParameters, appData }, callback) => {
-    // call produce based on the prameters from the client
+    // call produce based on the parameters from the client
     producer = await producerTransport.produce({
       kind,
       rtpParameters,
