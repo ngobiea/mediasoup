@@ -237,7 +237,7 @@ const createWebRtcTransport = async (callback) => {
       console.log('transport closed')
     })
 
-    // send back to the client the following prameters
+    // send back to the client the following parameters
     callback({
       // https://mediasoup.org/documentation/v3/mediasoup-client/api/#TransportOptions
       params: {
