@@ -8,15 +8,13 @@ import path from 'path';
 const __dirname = path.resolve();
 
 import { Server } from 'socket.io';
-import mediasoup from 'mediasoup';
+import { createWorker } from 'mediasoup';
 
 app.get('/', (_req, res) => {
   res.send('Hello from mediasoup app!');
 });
 
 app.use('/sfu', express.static(path.join(__dirname, 'public')));
-
-
 
 const httpsServer = http.createServer(app);
 httpsServer.listen(PORT, () => {
@@ -44,9 +42,9 @@ let producer;
 let consumer;
 
 // mediasoup server
-const createWorker = async () => {
+const createMediasoupWorker = async () => {
   const exitTimeout = 2000;
-  worker = await mediasoup.createWorker({
+  worker = await createWorker({
     rtcMinPort: 2000,
     rtcMaxPort: 2020,
   });
@@ -59,7 +57,7 @@ const createWorker = async () => {
   return worker;
 };
 
-worker = createWorker();
+worker = createMediasoupWorker();
 
 const mediaCodecs = [
   {
@@ -256,5 +254,6 @@ const createWebRtcTransport = async (callback) => {
         error,
       },
     });
+    return null;
   }
 };
