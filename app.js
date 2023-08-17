@@ -10,11 +10,20 @@ const __dirname = path.resolve();
 import { Server } from 'socket.io';
 import mediasoup from 'mediasoup';
 
-app.get('/', (_req, res) => {
-  res.send('Hello from mediasoup app!');
+
+app.get('*', (req, res, next) => {
+  const path = '/sfu/';
+
+  if (req.path.indexOf(path) == 0 && req.path.length > path.length)
+    return next();
+
+  res.send(
+    `You need to specify a room name in the path e.g. 'https://127.0.0.1/sfu/room'`
+  );
 });
 
-app.use('/sfu', express.static(path.join(__dirname, 'public')));
+
+app.use('/sfu/:room', express.static(path.join(__dirname, 'public')));
 
 const httpsServer = http.createServer(app);
 httpsServer.listen(PORT, () => {
@@ -35,7 +44,7 @@ const connections = io.of('/mediasoup');
  *         |-> Consumer
  **/
 let worker;
-let rooms = {}; // { roomName1: { Router, rooms: [ sicketId1, ... ] }, ...}
+let rooms = {}; // { roomName1: { Router, rooms: [ socketId1, ... ] }, ...}
 let peers = {}; // { socketId1: { roomName1, socket, transports = [id1, id2,] }, producers = [id1, id2,] }, consumers = [id1, id2,], peerDetails }, ...}
 let transports = []; // [ { socketId1, roomName1, transport, consumer }, ... ]
 let producers = []; // [ { socketId1, roomName1, producer, }, ... ]
@@ -44,7 +53,7 @@ let consumers = []; // [ { socketId1, roomName1, consumer, }, ... ]
 const createWorker = async () => {
   worker = await mediasoup.createWorker({
     rtcMinPort: 2000,
-    rtcMaxPort: 2020,
+    rtcMaxPort: 2100,
   });
   console.log(`worker pid ${worker.pid}`);
 
@@ -163,26 +172,6 @@ connections.on('connection', async (socket) => {
 
     return router1;
   };
-
-  // socket.on('createRoom', async (callback) => {
-  //   if (router === undefined) {
-  //     // worker.createRouter(options)
-  //     // options = { mediaCodecs, appData }
-  //     // mediaCodecs -> defined above
-  //     // appData -> custom application data - we are not supplying any
-  //     // none of the two are required
-  //     router = await worker.createRouter({ mediaCodecs, })
-  //     console.log(`Router ID: ${router.id}`)
-  //   }
-
-  //   getRtpCapabilities(callback)
-  // })
-
-  // const getRtpCapabilities = (callback) => {
-  //   const rtpCapabilities = router.rtpCapabilities
-
-  //   callback({ rtpCapabilities })
-  // }
 
   // Client emits a request to create server side Transport
   // We need to differentiate between the producer and consumer transports
@@ -429,8 +418,8 @@ const createWebRtcTransport = async (router) => {
       const webRtcTransport_options = {
         listenIps: [
           {
-            ip: '0.0.0.0', // replace with relevant IP address
-            announcedIp: '10.0.0.115',
+            ip: '192.168.18.64', // replace with relevant IP address
+            // announcedIp: ' 192.168.18.64',
           },
         ],
         enableUdp: true,

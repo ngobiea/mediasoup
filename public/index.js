@@ -17,8 +17,7 @@ let producerTransport;
 let consumerTransports = [];
 let audioProducer;
 let videoProducer;
-let consumer;
-let isProducer = false;
+
 
 // https://mediasoup.org/documentation/v3/mediasoup-client/api/#ProducerOptions
 // https://mediasoup.org/documentation/v3/mediasoup-client/api/#transport-produce
@@ -270,7 +269,6 @@ const signalNewConsumerTransport = async (remoteProducerId) => {
           }
         }
       );
-
       connectRecvTransport(consumerTransport, remoteProducerId, params.id);
     }
   );
