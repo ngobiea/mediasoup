@@ -10,7 +10,6 @@ const __dirname = path.resolve();
 import { Server } from 'socket.io';
 import mediasoup from 'mediasoup';
 
-
 app.get('*', (req, res, next) => {
   const path = '/sfu/';
 
@@ -21,7 +20,6 @@ app.get('*', (req, res, next) => {
     `You need to specify a room name in the path e.g. 'https://127.0.0.1/sfu/room'`
   );
 });
-
 
 app.use('/sfu/:room', express.static(path.join(__dirname, 'public')));
 
