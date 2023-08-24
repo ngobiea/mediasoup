@@ -1,7 +1,8 @@
 //index.js
 const io = require('socket.io-client');
 const mediasoupClient = require('mediasoup-client');
-
+const produceBtn = document.getElementById('btnRecvSendTransport')
+// console.log(produceBtn.innerHTML)
 const socket = io('/mediasoup');
 
 socket.on('connection-success', ({ socketId, existsProducer }) => {
@@ -50,7 +51,6 @@ const streamSuccess = (stream) => {
     track,
     ...params,
   };
-
   goConnect(true);
 };
 

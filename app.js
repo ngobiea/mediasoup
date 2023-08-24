@@ -112,7 +112,6 @@ peers.on('connection', async (socket) => {
 
     callback({ rtpCapabilities });
   };
-
   // Client emits a request to create server side Transport
   // We need to differentiate between the producer and consumer transports
   socket.on('createWebRtcTransport', async ({ sender }, callback) => {
