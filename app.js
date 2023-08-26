@@ -77,7 +77,7 @@ const mediaCodecs = [
 ];
 
 peers.on('connection', async (socket) => {
-  console.log(socket.id);
+  // console.log(socket.id);
   socket.emit('connection-success', { socketId: socket.id });
   socket.on('disconnect', () => {
     // do some cleanup
@@ -96,7 +96,7 @@ peers.on('connection', async (socket) => {
   socket.on('getRtpCapabilities', (callback) => {
     const rtpCapabilities = router.rtpCapabilities;
 
-    console.log('rtp Capabilities', rtpCapabilities);
+    // console.log('rtp Capabilities', rtpCapabilities);
 
     // call callback from the client and send back the rtpCapabilities
     callback({ rtpCapabilities });
@@ -152,6 +152,8 @@ peers.on('connection', async (socket) => {
   });
 
   socket.on('consume', async ({ rtpCapabilities }, callback) => {
+    // console.log(producer.id)
+    // console.log(rtpCapabilities)
     try {
       // check if the router can consume the specified producer
       if (
@@ -163,9 +165,10 @@ peers.on('connection', async (socket) => {
         // transport can now consume and return a consumer
         consumer = await consumerTransport.consume({
           producerId: producer.id,
-          paused: true,
+          // paused: true,
           rtpCapabilities,
         });
+        console.log(consumer)
 
         consumer.on('transportclose', () => {
           console.log('transport close from consumer');
@@ -210,14 +213,15 @@ const createWebRtcTransport = async (callback) => {
       listenIps: [
         {
           // replace with relevant IP address
-          ip: '0.0.0.0',
-          announcedIp: '127.0.0.1',
+          ip: '192.168.18.64',
+          // announcedIp: '127.0.0.1',
         },
       ],
       enableUdp: true,
       enableTcp: true,
       preferUdp: true,
     };
+
 
     // https://mediasoup.org/documentation/v3/mediasoup/api/#router-createWebRtcTransport
     const transport = await router.createWebRtcTransport(

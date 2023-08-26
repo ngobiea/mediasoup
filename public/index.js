@@ -240,8 +240,10 @@ const connectRecvTransport = async () => {
       rtpCapabilities: device.rtpCapabilities,
     },
     async ({ params }) => {
+      console.log(params)
       if (params.error) {
         console.log('Cannot Consume');
+        console.log(params.error)
         return;
       }
 
@@ -257,6 +259,7 @@ const connectRecvTransport = async () => {
 
       // destructure and retrieve the video track from the producer
       const { track } = consumer;
+      console.log(consumer)
 
       remoteVideo.srcObject = new MediaStream([track]);
 
