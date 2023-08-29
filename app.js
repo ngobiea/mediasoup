@@ -33,16 +33,16 @@ const io = new Server(httpsServer);
 // socket.io namespace (could represent a room?)
 const connections = io.of('/mediasoup');
 
-/**
+/*
  * Worker
  * |-> Router(s)
  *     |-> Producer Transport(s)
  *         |-> Producer
  *     |-> Consumer Transport(s)
  *         |-> Consumer
- **/
+ */
 let worker;
-let rooms = {}; // { roomName1: { Router, rooms: [ socketId1, ... ] }, ...}
+let rooms = {}; // { roomName1: { Router, peers: [ socketId1, ... ] }, ...}
 let peers = {}; // { socketId1: { roomName1, socket, transports = [id1, id2,] }, producers = [id1, id2,] }, consumers = [id1, id2,], peerDetails }, ...}
 let transports = []; // [ { socketId1, roomName1, transport, consumer }, ... ]
 let producers = []; // [ { socketId1, roomName1, producer, }, ... ]
@@ -138,6 +138,7 @@ connections.on('connection', async (socket) => {
         isAdmin: false, // Is this Peer the Admin?
       },
     };
+  
 
     // get Router RTP Capabilities
     const rtpCapabilities = router1.rtpCapabilities;
@@ -276,7 +277,6 @@ connections.on('connection', async (socket) => {
   // see client's socket.emit('transport-connect', ...)
   socket.on('transport-connect', ({ dtlsParameters }) => {
     console.log('DTLS PARAMS... ', { dtlsParameters });
-
     getTransport(socket.id).connect({ dtlsParameters });
   });
 

@@ -55,7 +55,6 @@ const streamSuccess = (stream) => {
 
   audioParams = { track: stream.getAudioTracks()[0], ...audioParams };
   videoParams = { track: stream.getVideoTracks()[0], ...videoParams };
-
   joinRoom();
 };
 
