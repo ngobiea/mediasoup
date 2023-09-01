@@ -149,6 +149,8 @@ const createSendTransport = () => {
     // https://mediasoup.org/documentation/v3/communication-between-client-and-server/#producing-media
     // this event is raised when a first call to transport.produce() is made
     // see connectSendTransport() below
+    console.log('producerTransport on client:', producerTransport)
+
     producerTransport.on(
       'connect',
       async ({ dtlsParameters }, callback, errback) => {
@@ -237,6 +239,7 @@ const createRecvTransport = async () => {
       // based on server's consumer transport params
       // https://mediasoup.org/documentation/v3/mediasoup-client/api/#device-createRecvTransport
       consumerTransport = device.createRecvTransport(params);
+      console.log('consumerTransport on client:', consumerTransport)
 
       // https://mediasoup.org/documentation/v3/communication-between-client-and-server/#producing-media
       // this event is raised when a first call to transport.produce() is made
