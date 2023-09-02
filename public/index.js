@@ -17,7 +17,9 @@ let producerTransport;
 let consumerTransports = [];
 let audioProducer;
 let videoProducer;
-
+let audioParams;
+let videoParams = { params };
+let consumingTransports = [];
 
 // https://mediasoup.org/documentation/v3/mediasoup-client/api/#ProducerOptions
 // https://mediasoup.org/documentation/v3/mediasoup-client/api/#transport-produce
@@ -46,9 +48,6 @@ let params = {
   },
 };
 
-let audioParams;
-let videoParams = { params };
-let consumingTransports = [];
 
 const streamSuccess = (stream) => {
   localVideo.srcObject = stream;
@@ -186,7 +185,14 @@ const createSendTransport = () => {
     connectSendTransport();
   });
 };
-
+const getProducers = () => {
+  socket.emit('getProducers', (producerIds) => {
+    console.log(producerIds);
+    // for each of the producer create a consumer
+    // producerIds.forEach(id => signalNewConsumerTransport(id))
+    producerIds.forEach(signalNewConsumerTransport);
+  });
+};
 const connectSendTransport = async () => {
   // we now call produce() to instruct the producer transport
   // to send media to the Router
@@ -278,14 +284,7 @@ socket.on('new-producer', ({ producerId }) =>
   signalNewConsumerTransport(producerId)
 );
 
-const getProducers = () => {
-  socket.emit('getProducers', (producerIds) => {
-    console.log(producerIds);
-    // for each of the producer create a consumer
-    // producerIds.forEach(id => signalNewConsumerTransport(id))
-    producerIds.forEach(signalNewConsumerTransport);
-  });
-};
+
 
 const connectRecvTransport = async (
   consumerTransport,
